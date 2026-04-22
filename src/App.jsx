@@ -7,6 +7,7 @@ import Header from './components/Header'
 import Slider from './components/Slider'
 import ProductionHouse from './components/ProductionHouse'
 import GenereMovieList from './components/GenereMovieList'
+import Footer from './components/Footer'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -18,6 +19,7 @@ function App() {
         <Slider />
         <ProductionHouse />
         <GenereMovieList />
+        <Footer />
       </div>
     </>
   )

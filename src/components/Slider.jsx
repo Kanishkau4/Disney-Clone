@@ -8,35 +8,70 @@ const screenWidth = window.innerWidth;
 const Slider = () => {
 
     const [movieList, setMovieList] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
     const elementRef = useRef(null);
-    const getTrendingMovies = () => {
-        GlobalAPI.getTrendingVideo.then((resp) => {
-            console.log(resp.data.results);
-            setMovieList(resp.data.results);
-        })
-    }
 
     useEffect(() => {
         getTrendingMovies();
     }, [])
 
-    const slideRight = (element) => {
-        element.scrollLeft += screenWidth - 110;
+    useEffect(() => {
+        if (movieList.length > 0) {
+            const interval = setInterval(() => {
+                const nextIndex = (currentIndex + 1) % movieList.length;
+                slideToIndex(nextIndex);
+            }, 5000);
+            return () => clearInterval(interval);
+        }
+    }, [movieList, currentIndex]);
+
+    const getTrendingMovies = () => {
+        GlobalAPI.getTrendingVideo.then((resp) => {
+            setMovieList(resp.data.results);
+        })
     }
-    const slideLeft = (element) => {
-        element.scrollLeft -= screenWidth - 110;
+
+    const slideRight = () => {
+        const nextIndex = (currentIndex + 1) % movieList.length;
+        slideToIndex(nextIndex);
     }
+    const slideLeft = () => {
+        const prevIndex = (currentIndex - 1 + movieList.length) % movieList.length;
+        slideToIndex(prevIndex);
+    }
+
+    const slideToIndex = (index) => {
+        setCurrentIndex(index);
+        const scrollAmount = index * (window.innerWidth - 102); // Adjusted for px-16 (32*2) and some margin
+        elementRef.current.scrollTo({
+            left: scrollAmount,
+            behavior: 'smooth'
+        });
+    }
+
     return (
-        <div>
-            <HiChevronLeft onClick={() => slideLeft(elementRef.current)} className="absolute left-0 top-[280px] z-10 transform -translate-y-1/2 text-white text-3xl cursor-pointer hidden md:block" />
-            <HiChevronRight onClick={() => slideRight(elementRef.current)} className="absolute right-0 top-[280px] z-10 transform -translate-y-1/2 text-white text-3xl cursor-pointer hidden md:block" />
+        <div className="relative group">
+            <HiChevronLeft onClick={slideLeft} className="absolute left-8 top-[155px] z-10 transform -translate-y-1/2 text-white text-4xl cursor-pointer hidden group-hover:block transition-all" />
+            <HiChevronRight onClick={slideRight} className="absolute right-8 top-[155px] z-10 transform -translate-y-1/2 text-white text-4xl cursor-pointer hidden group-hover:block transition-all" />
+
             <div ref={elementRef} className="flex overflow-x-auto w-full px-16 py-4 scrollbar-hide scroll-smooth">
-                {movieList.map((item) => (
-                    <img src={IMAGE_BASE_URL + item.backdrop_path} alt="" className="min-w-full md:h-[310px] object-cover object-left-top mr-5 rounded-md hover:border-[4px] border-gray-400 transition-all duration-100 ease-in-out" />
+                {movieList.map((item, index) => (
+                    <img key={index} src={IMAGE_BASE_URL + item.backdrop_path} alt="" className="min-w-full md:h-[310px] object-cover object-left-top mr-5 rounded-md hover:border-[4px] border-gray-400 transition-all duration-100 ease-in-out" />
+                ))}
+            </div>
+
+            <div className="flex justify-center gap-2 mt-[-20px] pb-5">
+                {movieList.map((_, index) => (
+                    <div
+                        key={index}
+                        onClick={() => slideToIndex(index)}
+                        className={`w-2 h-2 rounded-full cursor-pointer transition-all duration-300 ${index === currentIndex ? 'bg-white w-4' : 'bg-gray-500'}`}
+                    ></div>
                 ))}
             </div>
         </div>
     )
 }
+
 
 export default Slider
