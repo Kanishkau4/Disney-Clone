@@ -11,11 +11,6 @@ const MovieDetail = () => {
     const [movie, setMovie] = useState(null)
     const [video, setVideo] = useState(null)
 
-    useEffect(() => {
-        getMovie()
-        window.scrollTo(0, 0)
-    }, [id])
-
     const getMovie = () => {
         GlobalAPI.getMovieDetailById(id).then((resp) => {
             console.log(resp.data)
@@ -31,6 +26,11 @@ const MovieDetail = () => {
             }
         })
     }
+
+    useEffect(() => {
+        getMovie()
+        window.scrollTo(0, 0)
+    }, [id])
 
     if (!movie) return <div className="text-white text-center mt-20">Loading...</div>
 

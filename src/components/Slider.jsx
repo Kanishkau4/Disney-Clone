@@ -5,13 +5,37 @@ import { Link } from "react-router-dom";
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original";
 
 
-const screenWidth = window.innerWidth;
 
 const Slider = () => {
 
     const [movieList, setMovieList] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const elementRef = useRef(null);
+
+    const getTrendingMovies = () => {
+        GlobalAPI.getTrendingVideo.then((resp) => {
+            setMovieList(resp.data.results);
+        })
+    }
+
+    const slideToIndex = (index) => {
+        setCurrentIndex(index);
+        const scrollAmount = index * (window.innerWidth - 102); // Adjusted for px-16 (32*2) and some margin
+        elementRef.current.scrollTo({
+            left: scrollAmount,
+            behavior: 'smooth'
+        });
+    }
+
+    const slideRight = () => {
+        const nextIndex = (currentIndex + 1) % movieList.length;
+        slideToIndex(nextIndex);
+    }
+
+    const slideLeft = () => {
+        const prevIndex = (currentIndex - 1 + movieList.length) % movieList.length;
+        slideToIndex(prevIndex);
+    }
 
     useEffect(() => {
         getTrendingMovies();
@@ -26,30 +50,6 @@ const Slider = () => {
             return () => clearInterval(interval);
         }
     }, [movieList, currentIndex]);
-
-    const getTrendingMovies = () => {
-        GlobalAPI.getTrendingVideo.then((resp) => {
-            setMovieList(resp.data.results);
-        })
-    }
-
-    const slideRight = () => {
-        const nextIndex = (currentIndex + 1) % movieList.length;
-        slideToIndex(nextIndex);
-    }
-    const slideLeft = () => {
-        const prevIndex = (currentIndex - 1 + movieList.length) % movieList.length;
-        slideToIndex(prevIndex);
-    }
-
-    const slideToIndex = (index) => {
-        setCurrentIndex(index);
-        const scrollAmount = index * (window.innerWidth - 102); // Adjusted for px-16 (32*2) and some margin
-        elementRef.current.scrollTo({
-            left: scrollAmount,
-            behavior: 'smooth'
-        });
-    }
 
     return (
         <div className="relative group">
