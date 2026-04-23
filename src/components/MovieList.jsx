@@ -45,7 +45,7 @@ const MovieList = ({ genreId, index_ }) => {
     return (
         <div className='relative'>
             {showBackIcon && <IoChevronBackOutline onClick={() => slideLeft(elementRef.current)} className={'text-[40px] p-2 z-10 hidden md:block absolute left-0 ' + (index_ % 3 == 0 ? 'top-[70px]' : 'top-[150px]') + ' text-white cursor-pointer'} />}
-            <div ref={elementRef} onScroll={handleScroll} className='flex overflow-x-auto scrollbar-hide px-8 md:px-16 scroll-smooth gap-8'>
+            <div ref={elementRef} onScroll={handleScroll} className='flex overflow-x-auto scrollbar-hide px-2 md:px-4 scroll-smooth gap-8'>
                 {movieList.map((item, index) => (
                     <React.Fragment key={index}>
                         {index_ % 3 == 0 ? <HrMovieCard movie={item} /> : <MovieCard movie={item} />}

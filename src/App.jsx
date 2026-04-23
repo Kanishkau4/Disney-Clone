@@ -4,21 +4,22 @@ import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
 import Header from './components/Header'
-import Slider from './components/Slider'
-import ProductionHouse from './components/ProductionHouse'
-import GenereMovieList from './components/GenereMovieList'
 import Footer from './components/Footer'
+import { Routes, Route } from 'react-router-dom'
+import Home from './pages/Home'
+import MovieDetail from './pages/MovieDetail'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-      <div className='bg-[#131520] min-h-screen w-screen'>
+      <div className='bg-[#131520] min-h-screen w-screen relative'>
         <Header />
-        <Slider />
-        <ProductionHouse />
-        <GenereMovieList />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/movie/:id" element={<MovieDetail />} />
+        </Routes>
         <Footer />
       </div>
     </>
@@ -26,3 +27,4 @@ function App() {
 }
 
 export default App
+

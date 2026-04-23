@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import GlobalAPI from "../Services/GlobalAPI";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
+import { Link } from "react-router-dom";
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original";
+
 
 const screenWidth = window.innerWidth;
 
@@ -56,7 +58,9 @@ const Slider = () => {
 
             <div ref={elementRef} className="flex overflow-x-auto w-full px-16 py-4 scrollbar-hide scroll-smooth">
                 {movieList.map((item, index) => (
-                    <img key={index} src={IMAGE_BASE_URL + item.backdrop_path} alt="" className="min-w-full md:h-[310px] object-cover object-left-top mr-5 rounded-md hover:border-[4px] border-gray-400 transition-all duration-100 ease-in-out" />
+                    <Link key={index} to={`/movie/${item.id}`} className="min-w-full mr-5 shrink-0 block">
+                        <img src={IMAGE_BASE_URL + item.backdrop_path} alt="" className="w-full md:h-[310px] object-cover object-left-top rounded-md hover:border-[4px] border-gray-400 transition-all duration-100 ease-in-out" />
+                    </Link>
                 ))}
             </div>
 
